@@ -8,7 +8,7 @@ extends Node
 
 
 onready var root := get_tree().get_current_scene()
-onready var DebugOverlay = root.find_node("DebugOverlay")
+onready var DebugOverlay = get_parent()
 
 func _ready() -> void:
 	
