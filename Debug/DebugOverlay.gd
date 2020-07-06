@@ -1,8 +1,9 @@
 extends CanvasLayer
 
 # Debug Overlay controls displaying of stats and adds stats arrays 
-# It is called from DebugManager that then tells it what nodes to add to stats
-# It can be toggles as active or inactive in each scene for easier readability
+# It gets stats to display via signal stat_passed from DebugManager 
+# that then tells it what nodes to add to stats.
+# It can be toggles as active(default) or inactive in each scene for easier readability
 
 export var active = true
 
@@ -11,7 +12,11 @@ var text_strings = []
 
 func _ready() -> void:
 	$RichTextLabel.rect_min_size = get_viewport().size
+	$DebugManager.pass_stats()
 
+func _on_DebugManager_stat_passed(stat_name:String, object:Object, stat_ref:String, 
+		is_method:bool, colour:String = "white") -> void:
+	add_stat(stat_name ,object ,stat_ref ,is_method,colour)
 
 func _process(delta):
 	toggle_visibility()
@@ -28,14 +33,14 @@ func _process(delta):
 		text_strings.append(str("Static Memory: ", String.humanize_size(mem)))
 		
 		# Sorting new stat into display readable array
-		for s in stats:
+		for stat in stats:
 				var value = null
-				if s[1] and is_instance_valid(s[1]):
-					if s[3]:
-						value = s[1].call(s[2])
+				if stat[1] and is_instance_valid(stat[1]):
+					if stat[3]:
+						value = stat[1].call(stat[2])
 					else:
-						value = s[1].get(s[2])
-				text_strings.append(str(s[0], ": ", value))
+						value = stat[1].get(stat[2])
+				text_strings.append(str(stat[0], ": ", value))
 		
 		#Adding colors to display for readability
 		for i in text_strings.size():
@@ -58,3 +63,5 @@ func toggle_visibility() -> void:
 		$RichTextLabel.visible = true
 	else:
 		$RichTextLabel.visible = false
+
+

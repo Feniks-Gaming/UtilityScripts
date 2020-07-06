@@ -16,3 +16,4 @@ __meta__ = {
 
 [node name="DebugManager" type="Node" parent="."]
 script = ExtResource( 2 )
+[connection signal="stat_passed" from="DebugManager" to="." method="_on_DebugManager_stat_passed"]
