@@ -5,7 +5,9 @@ extends CanvasLayer
 # that then tells it what nodes to add to stats.
 # It can be toggles as active(default) or inactive in each scene for easier readability
 
-export var active = true
+export var active: bool = true
+export var print_os_stats:bool = true
+export var print_other_stats:bool = true
 
 var stats = [] 
 var text_strings = []
@@ -15,7 +17,7 @@ func _ready() -> void:
 	$DebugManager.pass_stats()
 
 func _on_DebugManager_stat_passed(stat_name:String, object:Object, stat_ref:String, 
-		is_method:bool, colour:String = "white") -> void:
+		is_method:bool = false, colour:String = "white") -> void:
 	add_stat(stat_name ,object ,stat_ref ,is_method,colour)
 
 func _process(delta):
@@ -26,14 +28,16 @@ func _process(delta):
 		text_strings.clear()
 		$RichTextLabel.clear()
 		
-		#Always print FPS and memory usage
-		var fps := Engine.get_frames_per_second()
-		text_strings.append(str("FPS: ", fps))
-		var mem := OS.get_static_memory_usage()
-		text_strings.append(str("Static Memory: ", String.humanize_size(mem)))
+		if print_os_stats:
+		# FPS and memory usage
+			var fps := Engine.get_frames_per_second()
+			text_strings.append(str("FPS: ", fps))
+			var mem := OS.get_static_memory_usage()
+			text_strings.append(str("Static Memory: ", String.humanize_size(mem)))
 		
 		# Sorting new stat into display readable array
-		for stat in stats:
+		if print_other_stats:
+			for stat in stats:
 				var value = null
 				if stat[1] and is_instance_valid(stat[1]):
 					if stat[3]:
