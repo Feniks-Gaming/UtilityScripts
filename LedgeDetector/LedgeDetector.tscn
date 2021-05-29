@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Source/Player/LedgeDetector/LedgeDetector.gd" type="Script" id=1]
+
+[node name="LedgeDetector" type="Node2D"]
+position = Vector2( 0, -60 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="WallRay" type="RayCast2D" parent="."]
+rotation = -1.5708
+enabled = true
+collision_mask = 2
+
+[node name="ClimbBlockedRay" type="RayCast2D" parent="."]
+rotation = -2.35619
+enabled = true
+cast_to = Vector2( 0, 70 )
+collision_mask = 2
